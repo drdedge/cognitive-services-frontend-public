@@ -1,0 +1,48 @@
+# Core Framework
+fastapi
+uvicorn[standard]
+python-multipart
+aiofiles
+python-dotenv
+
+# Azure Services
+azure-ai-documentintelligence
+azure-storage-blob
+azure-cognitiveservices-speech
+azure-ai-translation-text
+
+# Data Processing
+pandas
+openpyxl
+numpy
+matplotlib
+seaborn
+
+# Document Processing
+python-docx
+mistune
+htmldocx
+
+# Real-time Communication
+websockets
+
+# Data Validation
+pydantic
+pydantic-settings
+
+# File Type Detection
+python-magic
+python-magic-bin  # Windows binary for python-magic
+
+# HTTP Clients
+aiohttp
+httpx
+
+# Testing (optional, but recommended)
+pytest
+pytest-asyncio
+pytest-cov
+
+# Development Tools (optional)
+black
+flake8

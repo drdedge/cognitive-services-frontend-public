@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(npm install)",
+      "Bash(npm run dev:*)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "Bash(python:*)",
+      "Bash(pip3 install:*)",
+      "Bash(npm run build:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(rm:*)",
+      "Bash(mv:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"=== $f ===\")",
+      "Bash(head:*)",
+      "Bash(echo)",
+      "Bash(done)",
+      "Bash(pip install:*)",
+      "Bash(curl:*)",
+      "Bash(cat:*)",
+      "Bash(npm run lint:*)",
+      "Bash(touch:*)"
+    ],
+    "deny": []
+  }
+}

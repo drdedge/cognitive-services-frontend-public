@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Test Page</h1>
+        <p>If you can see this, basic HTML is working.</p>
+    </div>
+    
+    <script>
+        console.log('Debug script loaded');
+        
+        // Test if we can access localhost:3000
+        fetch('http://localhost:3000/')
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.text();
+            })
+            .then(html => {
+                console.log('HTML length:', html.length);
+                if (html.includes('script')) {
+                    console.log('Page contains scripts');
+                } else {
+                    console.log('No scripts found in page');
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    </script>
+</body>
+</html>

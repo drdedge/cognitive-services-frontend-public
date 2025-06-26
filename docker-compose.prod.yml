@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Build-time variables
+        - NODE_ENV=production
+    ports:
+      - "80:80"
+    environment:
+      # In production, this should be your actual backend URL
+      - VITE_API_URL=${BACKEND_URL:-http://backend:8000}
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - cognitive-services-net
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      # Load environment variables from .env file
+      - ./backend/.env
+    environment:
+      # Production-specific overrides
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost}
+      - LOG_LEVEL=WARNING
+      - ENVIRONMENT=production
+      # Disable auto-reload in production
+      - RELOAD=false
+    networks:
+      - cognitive-services-net
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # Optional: Add nginx as reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx-prod.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - cognitive-services-net
+    restart: always
+
+networks:
+  cognitive-services-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

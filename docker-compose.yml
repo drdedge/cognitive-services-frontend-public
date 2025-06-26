@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    environment:
+      # Frontend needs to know where the backend API is
+      # In production, this would be your backend domain
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - cognitive-services-net
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      # Load environment variables from .env file
+      - ./backend/.env
+    environment:
+      # Override specific variables for docker environment
+      - CORS_ORIGINS=http://localhost:3000,http://localhost
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=development
+    volumes:
+      # Mount for development - remove in production
+      - ./backend:/app
+      - ./utils:/app/utils
+    networks:
+      - cognitive-services-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  cognitive-services-net:
+    driver: bridge
